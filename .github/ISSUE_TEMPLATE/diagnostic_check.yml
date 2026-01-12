@@ -1,0 +1,197 @@
+name: Diagnostic Check Enhancement
+description: Propose a new diagnostic check or enhance an existing one
+title: "[Check]: "
+labels: ["diagnostic-check", "enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve UCP Doctor's diagnostic capabilities! Use this template to propose new checks or enhancements to existing checks.
+
+  - type: dropdown
+    id: check-type
+    attributes:
+      label: Check Type
+      description: Is this a new check or an enhancement to an existing one?
+      options:
+        - New diagnostic check
+        - Enhancement to existing check
+        - Fix for incorrect check behavior
+    validations:
+      required: true
+
+  - type: input
+    id: check-name
+    attributes:
+      label: Check Name
+      description: The name of the diagnostic check
+      placeholder: e.g., "Rate Limiting Validation" or "CORS Header Check"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: check-category
+    attributes:
+      label: Check Category
+      description: Which category should this check belong to?
+      options:
+        - CONNECTIVITY
+        - STRUCTURE
+        - PROTOCOL
+        - CAPABILITIES
+        - SERVICES
+        - PAYMENT
+        - SECURITY
+        - New category (specify in description)
+    validations:
+      required: true
+
+  - type: textarea
+    id: ucp-spec-reference
+    attributes:
+      label: UCP Specification Reference
+      description: Which section of the UCP specification does this check validate?
+      placeholder: |
+        Spec section: [e.g., "Discovery Profile - Capabilities", "Services - REST Transport"]
+        Spec version: 2026-01-11
+        Relevant quote: "..."
+        Link: https://ucp.dev/spec/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: check-description
+    attributes:
+      label: Check Description
+      description: What does this check validate? What should it verify?
+      placeholder: |
+        This check should validate that...
+        It ensures compliance with...
+        It helps detect...
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation-logic
+    attributes:
+      label: Validation Logic
+      description: Describe the validation logic in detail
+      placeholder: |
+        1. The check should fetch...
+        2. It should verify that...
+        3. If condition X is true, then...
+        4. The check should PASS when...
+        5. The check should FAIL when...
+        6. The check should WARN when...
+        7. The check should SKIP when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What should happen when this check runs?
+      placeholder: |
+        Pass scenario: When a UCP implementation correctly...
+        Fail scenario: When a UCP implementation incorrectly...
+        Warning scenario: When a UCP implementation...
+        Skip scenario: When...
+    validations:
+      required: true
+
+  - type: textarea
+    id: test-cases
+    attributes:
+      label: Test Cases
+      description: Provide example test cases or URLs that should pass/fail this check
+      placeholder: |
+        Should PASS:
+        - URL: https://example1.com
+        - Reason: ...
+
+        Should FAIL:
+        - URL: https://example2.com
+        - Reason: ...
+
+        Should WARN:
+        - URL: https://example3.com
+        - Reason: ...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority / Severity
+      description: How important is this check for UCP validation?
+      options:
+        - Critical - Spec compliance requirement
+        - High - Important for most implementations
+        - Medium - Useful but not essential
+        - Low - Nice to have
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: What's the impact of NOT having this check?
+      placeholder: |
+        Without this check, UCP implementations might...
+        This could lead to...
+        Real-world consequences include...
+    validations:
+      required: false
+
+  - type: textarea
+    id: implementation-notes
+    attributes:
+      label: Implementation Notes
+      description: Any technical considerations or implementation details
+      placeholder: |
+        - Dependencies: ...
+        - Edge cases to handle: ...
+        - Potential challenges: ...
+        - Related checks: ...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: willing-to-contribute
+    attributes:
+      label: Willingness to Contribute
+      description: Would you be willing to implement this check?
+      options:
+        - Yes, I can implement this check
+        - Yes, I can help with implementation
+        - I can help with testing
+        - No, but I can provide test cases
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other information, examples, or references
+      placeholder: |
+        - Related UCP spec sections
+        - Examples from other validators
+        - Links to discussions
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm the following before submitting
+      options:
+        - label: I have referenced the specific UCP specification section this check validates
+          required: true
+        - label: I have searched existing checks to avoid duplicates
+          required: true
+        - label: I have described the validation logic clearly
+          required: true

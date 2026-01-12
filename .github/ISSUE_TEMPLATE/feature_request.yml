@@ -1,0 +1,134 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for UCP Doctor
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your interest in improving UCP Doctor! Please describe your feature idea below.
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: A clear and concise description of the feature you'd like to see
+      placeholder: I would like UCP Doctor to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve? What use case does it address?
+      placeholder: |
+        Currently, when testing UCP implementations, I need to...
+        This is frustrating because...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: How do you envision this feature working?
+      placeholder: |
+        The feature could work by...
+        For example, when a user...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: feature-category
+    attributes:
+      label: Feature Category
+      description: Which area of UCP Doctor does this feature relate to?
+      options:
+        - New Diagnostic Check
+        - Existing Check Enhancement
+        - User Interface / UX
+        - API / Backend
+        - Documentation
+        - Performance
+        - Security
+        - Developer Experience
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ucp-spec-relevance
+    attributes:
+      label: UCP Specification Relevance
+      description: Does this feature relate to the UCP specification?
+      options:
+        - Yes - Related to UCP spec compliance
+        - Yes - Related to new UCP spec features
+        - No - General tooling improvement
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: ucp-spec-reference
+    attributes:
+      label: UCP Specification Reference
+      description: If applicable, reference the relevant section of the UCP spec
+      placeholder: |
+        UCP Specification section: [e.g., Discovery Profile, Capabilities, Services]
+        Spec version: [e.g., 2026-01-11]
+        Link: [e.g., https://ucp.dev/spec/...]
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Approaches
+      description: Have you considered any alternative solutions or workarounds?
+      placeholder: |
+        Alternative 1: ...
+        Alternative 2: ...
+        Why I prefer the proposed solution: ...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: willing-to-contribute
+    attributes:
+      label: Willingness to Contribute
+      description: Would you be willing to contribute this feature?
+      options:
+        - Yes, I can implement this feature
+        - Yes, I can help with implementation
+        - I can help with testing
+        - I can help with documentation
+        - No, but I can provide feedback
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other information, mockups, examples, or context
+      placeholder: |
+        - Screenshots or mockups
+        - Examples from other tools
+        - Related issues or discussions
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm the following before submitting
+      options:
+        - label: I have searched existing feature requests to avoid duplicates
+          required: true
+        - label: I have clearly described the problem this feature solves
+          required: true
+        - label: This feature aligns with UCP Doctor's goal of validating UCP implementations
+          required: true

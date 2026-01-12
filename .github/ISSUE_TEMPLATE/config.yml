@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: UCP Specification Documentation
+    url: https://ucp.dev
+    about: Official Universal Commerce Protocol specification and documentation
+  - name: GitHub Discussions
+    url: https://github.com/awesomeucp/ucp-doctor/discussions
+    about: Ask questions, share ideas, and discuss UCP Doctor with the community
+  - name: General Questions & Support
+    url: https://github.com/awesomeucp/ucp-doctor/discussions/categories/q-a
+    about: Get help with using UCP Doctor or understanding diagnostic results
+  - name: UCP Implementation Questions
+    url: https://github.com/awesomeucp/ucp-doctor/discussions/categories/ucp-implementation
+    about: Questions about implementing the Universal Commerce Protocol itself

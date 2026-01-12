@@ -1,0 +1,54 @@
+{
+  "name": "ucp-doctor",
+  "version": "1.0.0",
+  "description": "Diagnostic tool for validating Universal Commerce Protocol (UCP) implementations",
+  "private": false,
+  "license": "Apache-2.0",
+  "author": "AwesomeUCP",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/awesomeucp/ucp-doctor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/awesomeucp/ucp-doctor/issues"
+  },
+  "homepage": "https://github.com/awesomeucp/ucp-doctor#readme",
+  "keywords": [
+    "ucp",
+    "universal-commerce-protocol",
+    "validation",
+    "diagnostic",
+    "e-commerce",
+    "protocol",
+    "testing"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "schemas:generate": "cd tools/schema-generator && npm run generate",
+    "schemas:watch": "cd tools/schema-generator && npm run watch",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "next": "16.1.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "zod": "^3.24.1",
+    "json-schema-to-zod": "^2.4.1",
+    "jose": "^5.9.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

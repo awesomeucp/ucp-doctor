@@ -1,0 +1,124 @@
+name: Sync Schemas on UCP Update
+
+on:
+  schedule:
+    # Check for UCP submodule updates daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  sync:
+    name: Sync UCP Schemas
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Check for UCP submodule updates
+        id: check-updates
+        run: |
+          cd ucp
+          git fetch origin
+          LOCAL=$(git rev-parse HEAD)
+          REMOTE=$(git rev-parse origin/main)
+
+          if [ "$LOCAL" != "$REMOTE" ]; then
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+            echo "📦 UCP submodule has updates"
+            echo "Local:  $LOCAL"
+            echo "Remote: $REMOTE"
+          else
+            echo "has_updates=false" >> $GITHUB_OUTPUT
+            echo "✅ UCP submodule is up to date"
+          fi
+
+      - name: Update UCP submodule
+        if: steps.check-updates.outputs.has_updates == 'true'
+        run: |
+          cd ucp
+          git pull origin main
+          cd ..
+          git add ucp
+
+      - name: Install dependencies
+        if: steps.check-updates.outputs.has_updates == 'true'
+        run: bun install
+
+      - name: Install schema-generator dependencies
+        if: steps.check-updates.outputs.has_updates == 'true'
+        working-directory: tools/schema-generator
+        run: bun install
+
+      - name: Regenerate schemas
+        if: steps.check-updates.outputs.has_updates == 'true'
+        run: bun run schemas:generate
+
+      - name: Check for schema changes
+        if: steps.check-updates.outputs.has_updates == 'true'
+        id: check-changes
+        run: |
+          if ! git diff --quiet lib/core/schemas/generated/; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "📝 Schemas have changed"
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No schema changes detected"
+          fi
+
+      - name: Create Pull Request
+        if: steps.check-updates.outputs.has_updates == 'true' && steps.check-changes.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            Update UCP schemas from specification updates
+
+            🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+            Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+          title: 'chore: Update UCP schemas from specification'
+          body: |
+            ## Summary
+            - Updates UCP submodule to latest version
+            - Regenerates Zod schemas from updated JSON schemas
+
+            ## Changes
+            This PR was automatically generated when the UCP specification submodule was updated.
+
+            The following schema files were regenerated:
+            ```
+            ${{ steps.check-changes.outputs.changed_files }}
+            ```
+
+            ## Testing
+            - [ ] Verify generated schemas compile
+            - [ ] Run validation tests against sample UCP profiles
+            - [ ] Check for breaking changes in schema structure
+
+            ---
+
+            🤖 Generated with [Claude Code](https://claude.com/claude-code)
+          branch: auto/sync-ucp-schemas
+          delete-branch: true
+          labels: |
+            automated
+            schemas
+            dependencies
+
+      - name: Summary
+        if: steps.check-updates.outputs.has_updates == 'true'
+        run: |
+          if [ "${{ steps.check-changes.outputs.has_changes }}" == "true" ]; then
+            echo "✅ Created PR with updated schemas"
+          else
+            echo "ℹ️  UCP submodule updated but no schema changes detected"
+          fi

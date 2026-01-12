@@ -1,0 +1,21 @@
+{
+  "name": "@ucp/schema-generator",
+  "version": "1.0.0",
+  "description": "Auto-generates Zod schemas from UCP JSON schemas",
+  "type": "module",
+  "scripts": {
+    "generate": "tsx src/index.ts",
+    "watch": "tsx src/watch.ts",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@apidevtools/json-schema-ref-parser": "^11.6.4",
+    "json-schema-to-zod": "^2.4.1",
+    "tsx": "^4.7.0",
+    "chokidar": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.3"
+  }
+}

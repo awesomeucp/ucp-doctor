@@ -1,0 +1,10 @@
+/**
+ * Auto-generated from UCP JSON Schema
+ * Source: {{sourcePath}}
+ * Schema ID: {{schemaId}}
+ *
+ * DO NOT EDIT MANUALLY - This file is auto-generated
+ * To update: Run `bun run schemas:generate` from ucp-doctor root
+ *
+ * Generated: {{timestamp}}
+ */

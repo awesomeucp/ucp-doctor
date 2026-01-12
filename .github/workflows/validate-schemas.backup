@@ -1,0 +1,53 @@
+name: Validate Schemas
+
+on:
+  push:
+    branches: [ main, fork ]
+  pull_request:
+    branches: [ main, fork ]
+
+jobs:
+  validate:
+    name: Validate Generated Schemas
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies (root)
+        run: bun install
+
+      - name: Install dependencies (schema-generator)
+        working-directory: tools/schema-generator
+        run: bun install
+
+      - name: Generate schemas
+        run: bun run schemas:generate
+
+      - name: Check for uncommitted changes
+        run: |
+          if ! git diff --quiet lib/core/schemas/generated/; then
+            echo "❌ Generated schemas are out of date!"
+            echo ""
+            echo "The following files have uncommitted changes:"
+            git diff --name-only lib/core/schemas/generated/
+            echo ""
+            echo "Please run 'bun run schemas:generate' locally and commit the changes."
+            echo ""
+            echo "Diff:"
+            git diff lib/core/schemas/generated/
+            exit 1
+          else
+            echo "✅ Generated schemas are up to date!"
+          fi
+
+      - name: Build project
+        run: bun run build
