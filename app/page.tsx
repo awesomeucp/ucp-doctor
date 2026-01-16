@@ -3,6 +3,8 @@
 import { useState, FormEvent } from 'react';
 import type { DiagnosticReport, CheckResult } from '@/lib/core';
 import { ThemeSwitcher } from '@/components/theme-switcher';
+import { Button } from '@/components/ui/Button';
+import { GithubLogo, Star, Eye } from '@phosphor-icons/react';
 
 type CheckStatus = 'pass' | 'fail' | 'warn' | 'skip' | 'pending';
 
@@ -207,9 +209,7 @@ export default function Home() {
         <div className="mb-4 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 border border-blue-200 dark:border-blue-800 px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-sm">
-              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-              </svg>
+              <GithubLogo size={20} weight="fill" className="text-blue-600 dark:text-blue-400 flex-shrink-0" />
               <span className="text-blue-900 dark:text-blue-100 font-medium">
                 Open Source on GitHub
               </span>
@@ -219,23 +219,18 @@ export default function Home() {
                 href="https://github.com/awesomeucp/ucp-doctor"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-900 dark:text-blue-100 bg-white dark:bg-zinc-900 border border-blue-300 dark:border-blue-700 rounded-md hover:bg-blue-50 dark:hover:bg-zinc-800 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-900 dark:text-blue-100 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
               >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z" />
-                </svg>
+                <Star size={16} weight="fill" />
                 Star
               </a>
               <a
                 href="https://github.com/awesomeucp/ucp-doctor/subscription"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-900 dark:text-blue-100 bg-white dark:bg-zinc-900 border border-blue-300 dark:border-blue-700 rounded-md hover:bg-blue-50 dark:hover:bg-zinc-800 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-900 dark:text-blue-100 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
               >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M8 2.5A5.5 5.5 0 1013.5 8a.75.75 0 011.5 0 7 7 0 11-7-7 .75.75 0 010 1.5z" />
-                  <path d="M8 5a3 3 0 100 6 3 3 0 000-6z" />
-                </svg>
+                <Eye size={16} weight="regular" />
                 Watch
               </a>
             </div>
@@ -260,13 +255,15 @@ export default function Home() {
               required
               className="flex-1 px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md text-sm bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-zinc-900 dark:focus:border-zinc-400"
             />
-            <button
+            <Button
               type="submit"
               disabled={isChecking}
-              className="px-4 py-2 border border-zinc-900 dark:border-zinc-100 rounded-md bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-sm font-medium hover:bg-zinc-700 dark:hover:bg-zinc-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              variant="primary"
+              size="md"
+              className="disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {isChecking ? 'Checking...' : 'Check'}
-            </button>
+            </Button>
           </div>
           <div className="flex gap-4 flex-wrap text-xs text-zinc-600 dark:text-zinc-400">
             <label className="flex items-center gap-1.5 cursor-pointer">
@@ -274,7 +271,7 @@ export default function Home() {
                 type="checkbox"
                 checked={checkEndpoints}
                 onChange={(e) => setCheckEndpoints(e.target.checked)}
-                className="accent-zinc-900 dark:accent-zinc-100"
+                className="accent-blue-600 dark:accent-blue-500"
               />
               Endpoints
             </label>
@@ -283,7 +280,7 @@ export default function Home() {
                 type="checkbox"
                 checked={checkSchemas}
                 onChange={(e) => setCheckSchemas(e.target.checked)}
-                className="accent-zinc-900 dark:accent-zinc-100"
+                className="accent-blue-600 dark:accent-blue-500"
               />
               Schemas
             </label>
@@ -292,7 +289,7 @@ export default function Home() {
                 type="checkbox"
                 checked={verbose}
                 onChange={(e) => setVerbose(e.target.checked)}
-                className="accent-zinc-900 dark:accent-zinc-100"
+                className="accent-blue-600 dark:accent-blue-500"
               />
               Details
             </label>
@@ -332,7 +329,7 @@ export default function Home() {
                     onClick={() => setCurrentFilter(filter)}
                     className={`px-2 py-1 text-[11px] border rounded transition-colors ${
                       currentFilter === filter
-                        ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 border-zinc-900 dark:border-zinc-100'
+                        ? 'bg-blue-600 dark:bg-blue-500 text-white border-blue-600 dark:border-blue-500'
                         : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-300 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800'
                     }`}
                   >
@@ -471,18 +468,20 @@ export default function Home() {
               <div className="flex items-center justify-between pt-3 border-t border-zinc-200 dark:border-zinc-800 text-xs text-zinc-500 dark:text-zinc-400">
                 <span>{duration}</span>
                 <div className="flex gap-2">
-                  <button
+                  <Button
                     onClick={copyToClipboard}
-                    className="px-2.5 py-1.5 text-[11px] bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-900 dark:text-zinc-100 transition-colors"
+                    variant="secondary"
+                    size="sm"
                   >
                     Copy
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={downloadJson}
-                    className="px-2.5 py-1.5 text-[11px] bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-900 dark:text-zinc-100 transition-colors"
+                    variant="secondary"
+                    size="sm"
                   >
                     Download
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
