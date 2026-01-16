@@ -1,8 +1,6 @@
 # UCP Doctor
 
-[![CI](https://github.com/awesomeucp/ucp-doctor/actions/workflows/ci.yml/badge.svg)](https://github.com/awesomeucp/ucp-doctor/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/github/package-json/v/awesomeucp/ucp-doctor)](package.json)
 [![Node Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](package.json)
 
 Diagnostic tool for validating [Universal Commerce Protocol (UCP)](https://ucp.dev) implementations.
