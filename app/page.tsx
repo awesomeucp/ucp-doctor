@@ -1,8 +1,19 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
-import { track } from '@vercel/analytics';
 import type { DiagnosticReport, CheckResult } from '@/lib/core';
+
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+const trackEvent = (eventName: string, params?: Record<string, unknown>) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', eventName, params);
+  }
+};
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/Button';
 import { GithubLogo, Star, Eye } from '@phosphor-icons/react';
@@ -75,10 +86,10 @@ export default function Home() {
     setCurrentFilter('all');
 
     // Track scan started
-    track('scan_started', {
+    trackEvent('scan_started', {
       domain: new URL(url.trim()).hostname,
-      checkEndpoints,
-      checkSchemas,
+      check_endpoints: checkEndpoints,
+      check_schemas: checkSchemas,
       verbose,
     });
 
@@ -118,8 +129,8 @@ export default function Home() {
       console.error('Error:', error);
 
       // Track scan error
-      track('scan_error', {
-        error: error instanceof Error ? error.message : 'Unknown error',
+      trackEvent('scan_error', {
+        error_message: error instanceof Error ? error.message : 'Unknown error',
       });
 
       setChecks(
@@ -171,7 +182,7 @@ export default function Home() {
       setDuration((data.report.duration / 1000).toFixed(2) + 's');
 
       // Track scan completed
-      track('scan_completed', {
+      trackEvent('scan_completed', {
         duration_ms: data.report.duration,
         total: data.report.summary.total,
         passed: data.report.summary.passed,
