@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
+import { track } from '@vercel/analytics';
 import type { DiagnosticReport, CheckResult } from '@/lib/core';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/Button';
@@ -73,6 +74,14 @@ export default function Home() {
     setDuration('');
     setCurrentFilter('all');
 
+    // Track scan started
+    track('scan_started', {
+      domain: new URL(url.trim()).hostname,
+      checkEndpoints,
+      checkSchemas,
+      verbose,
+    });
+
     try {
       const response = await fetch('/api/diagnose', {
         method: 'POST',
@@ -107,6 +116,12 @@ export default function Home() {
       }
     } catch (error) {
       console.error('Error:', error);
+
+      // Track scan error
+      track('scan_error', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+
       setChecks(
         new Map([
           [
@@ -154,6 +169,16 @@ export default function Home() {
       // complete
       setReport(data.report);
       setDuration((data.report.duration / 1000).toFixed(2) + 's');
+
+      // Track scan completed
+      track('scan_completed', {
+        duration_ms: data.report.duration,
+        total: data.report.summary.total,
+        passed: data.report.summary.passed,
+        failed: data.report.summary.failed,
+        warnings: data.report.summary.warnings,
+        skipped: data.report.summary.skipped,
+      });
     }
   };
 
