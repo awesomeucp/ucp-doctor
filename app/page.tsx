@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, useRef, FormEvent } from 'react';
 import type { DiagnosticReport, CheckResult } from '@/lib/core';
 
 declare global {
@@ -74,6 +74,7 @@ export default function Home() {
   const [duration, setDuration] = useState('');
   const [currentFilter, setCurrentFilter] = useState<'all' | CheckStatus>('all');
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+  const scanUrlRef = useRef<string>('');
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -85,9 +86,13 @@ export default function Home() {
     setDuration('');
     setCurrentFilter('all');
 
+    const scanUrl = url.trim();
+    scanUrlRef.current = scanUrl;
+
     // Track scan started
     trackEvent('scan_started', {
-      domain: new URL(url.trim()).hostname,
+      scan_url: scanUrl,
+      domain: new URL(scanUrl).hostname,
       check_endpoints: checkEndpoints,
       check_schemas: checkSchemas,
       verbose,
@@ -130,6 +135,8 @@ export default function Home() {
 
       // Track scan error
       trackEvent('scan_error', {
+        scan_url: scanUrl,
+        domain: new URL(scanUrl).hostname,
         error_message: error instanceof Error ? error.message : 'Unknown error',
       });
 
@@ -183,6 +190,9 @@ export default function Home() {
 
       // Track scan completed
       trackEvent('scan_completed', {
+        scan_url: scanUrlRef.current,
+        domain: new URL(scanUrlRef.current).hostname,
+        value: data.report.summary.passed,
         duration_ms: data.report.duration,
         total: data.report.summary.total,
         passed: data.report.summary.passed,
@@ -196,20 +206,28 @@ export default function Home() {
   const copyToClipboard = async () => {
     if (!report) return;
     await navigator.clipboard.writeText(JSON.stringify(report, null, 2));
+    trackEvent('report_copied', {
+      scan_url: scanUrlRef.current,
+      domain: scanUrlRef.current ? new URL(scanUrlRef.current).hostname : undefined,
+    });
   };
 
   const downloadJson = () => {
     if (!report) return;
     const json = JSON.stringify(report, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+    const downloadUrl = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
+    a.href = downloadUrl;
     a.download = `ucp-doctor-report-${new Date().toISOString().slice(0, 10)}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(downloadUrl);
+    trackEvent('report_downloaded', {
+      scan_url: scanUrlRef.current,
+      domain: scanUrlRef.current ? new URL(scanUrlRef.current).hostname : undefined,
+    });
   };
 
   const toggleGroup = (groupId: string) => {
@@ -255,6 +273,7 @@ export default function Home() {
                 href="https://github.com/awesomeucp/ucp-doctor"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackEvent('github_link_clicked', { action: 'star' })}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-900 dark:text-blue-100 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
               >
                 <Star size={16} weight="fill" />
@@ -264,6 +283,7 @@ export default function Home() {
                 href="https://github.com/awesomeucp/ucp-doctor/subscription"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackEvent('github_link_clicked', { action: 'watch' })}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-900 dark:text-blue-100 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
               >
                 <Eye size={16} weight="regular" />
@@ -287,6 +307,7 @@ export default function Home() {
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
+              onFocus={() => trackEvent('form_interaction', { field: 'url_input', action: 'focus' })}
               placeholder="https://demo.awesomeucp.com"
               required
               className="flex-1 px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md text-sm bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-zinc-900 dark:focus:border-zinc-400"
@@ -306,7 +327,10 @@ export default function Home() {
               <input
                 type="checkbox"
                 checked={checkEndpoints}
-                onChange={(e) => setCheckEndpoints(e.target.checked)}
+                onChange={(e) => {
+                  setCheckEndpoints(e.target.checked);
+                  trackEvent('option_changed', { option: 'endpoints', enabled: e.target.checked });
+                }}
                 className="accent-blue-600 dark:accent-blue-500"
               />
               Endpoints
@@ -315,7 +339,10 @@ export default function Home() {
               <input
                 type="checkbox"
                 checked={checkSchemas}
-                onChange={(e) => setCheckSchemas(e.target.checked)}
+                onChange={(e) => {
+                  setCheckSchemas(e.target.checked);
+                  trackEvent('option_changed', { option: 'schemas', enabled: e.target.checked });
+                }}
                 className="accent-blue-600 dark:accent-blue-500"
               />
               Schemas
@@ -324,7 +351,10 @@ export default function Home() {
               <input
                 type="checkbox"
                 checked={verbose}
-                onChange={(e) => setVerbose(e.target.checked)}
+                onChange={(e) => {
+                  setVerbose(e.target.checked);
+                  trackEvent('option_changed', { option: 'verbose', enabled: e.target.checked });
+                }}
                 className="accent-blue-600 dark:accent-blue-500"
               />
               Details
@@ -362,7 +392,14 @@ export default function Home() {
                 {(['all', 'pass', 'fail', 'warn', 'skip'] as const).map((filter) => (
                   <button
                     key={filter}
-                    onClick={() => setCurrentFilter(filter)}
+                    onClick={() => {
+                      setCurrentFilter(filter);
+                      trackEvent('filter_changed', {
+                        filter,
+                        scan_url: scanUrlRef.current,
+                        domain: scanUrlRef.current ? new URL(scanUrlRef.current).hostname : undefined,
+                      });
+                    }}
                     className={`px-2 py-1 text-[11px] border rounded transition-colors ${
                       currentFilter === filter
                         ? 'bg-blue-600 dark:bg-blue-500 text-white border-blue-600 dark:border-blue-500'
